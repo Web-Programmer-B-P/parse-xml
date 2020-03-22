@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<script>
+    $(document).ready(function () {
+        $('#id-box').prop("disabled", true);
+        $('#id.color').prop("disabled", true);
+        $('#send-path').click(function () {
+            let path = $('#path').val();
+            $('#path').val('');
+            // alert(path)
+            $.ajax({
+                url: '/get-data',
+                type: 'POST',
+                data: {path: path},
+                dataType: 'text',
+            }).done(function (data) {
+                loadId(data);
+            }).fail(function (err) {
+                console.log(err);
+            });
+        })
+    });
+
+    function loadId(data) {
+        $('#id-box').prop("disabled", false);
+        $('#id-color').prop("disabled", false);
+        $('#send-path').prop("disabled", true);
+        data = JSON.parse(data);
+        for (let key in data.id) {
+            $('#id-box option:last').after("<option value='" + data.id[key] + "'>" + data.id[key] + "</option>");
+        }
+        for (let key in data.colors) {
+            $('#id-color option:last').after("<option value='" + data.colors[key] + "'>" + data.colors[key] + "</option>");
+        }
+
+        let id = -1;
+        let color = '';
+        $('#id-box').change(function () {
+            id = $(this).val();
+        });
+        $('#id-color').change(function () {
+            color = $(this).val();
+        });
+        $('#find').click(function () {
+            sendChooseData(id, color)
+        })
+
+    }
+
+    function sendChooseData(id, color) {
+        $.ajax({
+            type: 'POST',
+            url: '/get-found-data',
+            data: {id: id, color: color},
+            dataType: 'text',
+        }).done(function (idArray) {
+            idArray = JSON.parse(idArray);
+        }).fail(function (err) {
+            console.log(err);
+        });
+    }
+</script>
+<div class="container">
+    <form>
+        <div class="form-group">
+            <label for="path">Введите полный путь к файлу:</label>
+            <input type="text" class="form-control" id="path" placeholder="Введите путь к файлу" name="path">
+        </div>
+        <button type="button" id="send-path" class="btn btn-success">Загрузить</button>
+    </form>
+    <div style='width: 100%; display: flex; margin-top: 20px'>
+        <div class='dropdown id-box' style='float: left'>
+            <select id='id-box' style='margin-bottom: 10px'>
+                <option>Выберите id</option>
+            </select>
+        </div>
+        <div class='dropdown id-color' style='float: left; margin-left: 20px'>
+            <select id='id-color' style='margin-bottom: 10px'>
+                <option>Выберите цвет</option>
+            </select>
+        </div>
+    </div>
+    <button type="button" id="find" class="btn btn-success">Найти</button>
+</div>
+</body>
+</html>

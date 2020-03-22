@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Storage>
+    <Box id="1">
+        <Item id="1"/>
+        <Item color="red" id="2"/>
+        <Box id="3">
+            <Item id="3" color="red" />
+            <Item id="4" color="black" />
+            <Box id="10">
+                <Item id="28"  color="blue"/>
+            </Box>
+        </Box>
+        <Box id="6"/>
+        <Item id="5"/>
+    </Box>
+    <Box id="9">
+    </Box>
+    <Item id="88" color="pink"/>
+    <Item id="6"/>
+</Storage>
